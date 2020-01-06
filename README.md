@@ -1,6 +1,6 @@
 # zio-repeat-as-resource
 
-Program output:
+Original program output (fixed by adding `.interruptible`):
 ```
 19:22:16.265 [zio-default-async-1-836514715] INFO net.zipec.ziorepeat.TestApp$ - creating resource 1
 19:22:16.313 [zio-default-async-1-836514715] INFO net.zipec.ziorepeat.TestApp$ - creating resource 2

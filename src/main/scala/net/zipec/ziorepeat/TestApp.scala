@@ -25,16 +25,17 @@ object TestApp extends CatsApp with StrictLogging {
       _ <- Resource.make[Task, Fiber[Throwable, Int]] {
         for {
           _ <- log("creating resource 2")
-          fiber <- log("working") // This will keep printing until SIGKILL forced termination
+          fiber <- log("working")
             .repeat(Schedule.spaced(ZioDuration.fromScala(1.second)))
             .provide(Clock.Live)
             .fork
+            .interruptible // this fixed my issue
         } yield fiber
       } { fiber =>
         for {
           _ <- log("cleaning resource 2")
           exit <- fiber.interrupt
-          _ <- log(s"cleaned resource 2 with ${exit.toEither}") // This will never get printed
+          _ <- log(s"cleaned resource 2 with ${exit.toEither}")
         } yield ()
       }
       _ <- Resource.make[Task, Unit](log("creating resource 3"))(_ => log("cleaning resource 3"))
